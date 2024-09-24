@@ -53,7 +53,9 @@ const Signup = () => {
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     {/* Username with Email Validation */}
                     <div>
-                        <Label htmlFor="username" value="Email Address (Username)" />
+                        <div className="mb-2 block">
+                            <Label htmlFor="username" value="Email Address (Username)" />
+                        </div>
                         <TextInput
                             id="username"
                             type="text"
@@ -75,7 +77,9 @@ const Signup = () => {
 
                     {/* First Name */}
                     <div>
-                        <Label htmlFor="firstName" value="First Name" />
+                        <div className="mb-2 block">
+                            <Label htmlFor="firstName" value="First Name" />
+                        </div>
                         <TextInput
                             id="firstName"
                             type="text"
@@ -88,7 +92,9 @@ const Signup = () => {
 
                     {/* Last Name */}
                     <div>
-                        <Label htmlFor="lastName" value="Last Name" />
+                        <div className="mb-2 block">
+                            <Label htmlFor="lastName" value="Last Name" />
+                        </div>
                         <TextInput
                             id="lastName"
                             type="text"
@@ -101,7 +107,9 @@ const Signup = () => {
 
                     {/* Password */}
                     <div>
-                        <Label htmlFor="password" value="Password" />
+                        <div className="mb-2 block">
+                            <Label htmlFor="password" value="Password" />
+                        </div>
                         <TextInput
                             id="password"
                             type="password"
@@ -120,7 +128,9 @@ const Signup = () => {
 
                     {/* Confirm Password */}
                     <div>
-                        <Label htmlFor="confirmPassword" value="Confirm Password" />
+                        <div className="mb-2 block">
+                            <Label htmlFor="confirmPassword" value="Confirm Password" />
+                        </div>
                         <TextInput
                             id="confirmPassword"
                             type="password"
