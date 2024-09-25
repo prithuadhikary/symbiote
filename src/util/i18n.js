@@ -14,6 +14,7 @@ const resources = {
   'fr-FR': {
     translation: {
       // Login Screen
+      "Log in": "Se connecter",
       "Login": "Se connecter",
       "Email Address (Username)": "Adresse e-mail (nom d'utilisateur)",
       "Password": "Mot de passe",

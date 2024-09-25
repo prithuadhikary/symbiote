@@ -14,6 +14,7 @@ const Signup = () => {
     const { post, get } = useApi();
     const navigate = useNavigate();
     const [signupError, setSignupError] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const {
         register,
@@ -55,10 +56,10 @@ const Signup = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-            <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-8">
+            <div className={`bg-white rounded-lg shadow-lg w-full max-w-md p-8 transition-opacity duration-300 ${!isLoaded ? 'opacity-0' : ''}`}>
                 <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">{t('Sign Up')}</h2>
                 <div className='flex items-center justify-center pb-2'>
-                    <LanguageSelect />
+                    <LanguageSelect isLoaded={() => setIsLoaded(true)}/>
                 </div>
                 {signupError && <Alert className='mt-0 mb-4 text-center' color="failure" icon={ExclamationIcon}>
                     {signupError}
@@ -175,7 +176,7 @@ const Signup = () => {
                     <p className="text-center text-sm text-gray-600 mt-4">
                         {t('Already have an account?')}{' '}
                         <Link to="/login" className="text-blue-600 hover:underline">
-                            {t('Log in')};
+                            {t('Log in')}
                         </Link>
                     </p>
                 </form>
