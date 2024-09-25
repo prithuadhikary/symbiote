@@ -1,5 +1,5 @@
 import { CheckCircleIcon, ExclamationIcon } from '@heroicons/react/outline';
-import { Alert, Button, Checkbox, Dropdown, Label, TextInput, Toast } from 'flowbite-react';
+import { Alert, Button, Checkbox, Label, TextInput, Toast } from 'flowbite-react';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -8,10 +8,11 @@ import { useTranslation } from 'react-i18next';
 import LanguageSelect from '../../common/LanguageSelect';
 
 const Login = () => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const { signedUp } = useParams();
     const { post } = useApi();
     const [loginError, setLoginError] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
     const navigate = useNavigate();
 
     const {
@@ -28,7 +29,11 @@ const Login = () => {
             localStorage.setItem('accessToken', response.accessToken);
             navigate('/dashboard');
         } catch (error) {
-            setLoginError(error.response.data.errorMessage);
+            if (error.response?.data?.errorMessage) {
+                setLoginError(error.response.data.errorMessage);
+            } else {
+                setLoginError(t('Something went terribly wrong.'));
+            }
         }
     };
 
@@ -37,13 +42,13 @@ const Login = () => {
     }, [])
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-            <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-8">
+        <div className={`min-h-screen flex items-center justify-center bg-gray-100 p-6`}>
+            <div className={`bg-white rounded-lg shadow-lg w-full max-w-md p-8 transition-opacity duration-300 ${!isLoaded ? 'opacity-0' : ''}`}>
                 <h2 className={`text-2xl font-bold text-gray-900 text-center ${signedUp || loginError ? 'mb-0' : 'mb-2'}`}>
                     {t('Login')}
                 </h2>
                 <div className='flex items-center justify-center pb-2'>
-                    <LanguageSelect />
+                    <LanguageSelect isLoaded={() => setIsLoaded(true)}/>
                 </div>
                 {loginError && <Alert className='mt-0 mb-4 text-center' color="failure" icon={ExclamationIcon}>
                     {loginError}
@@ -58,7 +63,7 @@ const Login = () => {
                     {/* Username with Email Validation */}
                     <div>
                         <div className="mb-2 block">
-                            <Label className='mb-2' htmlFor="username" value="Email Address (Username)" />
+                            <Label className='mb-2' htmlFor="username" value={t('Email Address (Username)')} />
                         </div>
                         <TextInput
                             id="username"
@@ -79,7 +84,7 @@ const Login = () => {
                     {/* Password */}
                     <div>
                         <div className="mb-2 block">
-                            <Label className='mb-2' htmlFor="password" value="Password" />
+                            <Label className='mb-2' htmlFor="password" value={t('Password')} />
                         </div>
                         <TextInput
                             id="password"
@@ -101,7 +106,7 @@ const Login = () => {
 
                     {/* Submit Button */}
                     <Button type="submit" color="primary" className="w-full">
-                        {t('Log In')}
+                        {t('Login')}
                     </Button>
 
                     {/* Forgot Password */}
@@ -115,7 +120,7 @@ const Login = () => {
                     <p className="text-center text-sm text-gray-600 mt-4">
                         {t("Don't have an account?")}{' '}
                         <Link to="/signup" className="text-indigo-600 hover:underline">
-                            Sign up
+                            {t('Sign up')}
                         </Link>
                     </p>
                 </form>

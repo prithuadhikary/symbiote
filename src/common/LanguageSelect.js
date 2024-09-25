@@ -1,13 +1,33 @@
 import { Button, Dropdown } from "flowbite-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { useTranslation } from "react-i18next";
 
-const LanguageSelect = () => {
+const LanguageSelect = ({ isLoaded }) => {
     const { i18n } = useTranslation();
-    const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
 
-    const availableLocales = useMemo(() => Object.keys(i18n.services.resourceStore.data), [i18n])
+    const availableLocales = useMemo(() => Object.keys(i18n.services.resourceStore.data), [i18n]);
+    const [selectedLanguage, setSelectedLanguage] = useState(() => {
+        const activeLocale = localStorage.getItem('activeLocale');
+        if(activeLocale) {
+            //i18n.changeLanguage(activeLocale);
+            return activeLocale;
+        } else {
+            //i18n.changeLanguage(availableLocales[0]);
+            return availableLocales[0];
+        }
+    });
+
+    useEffect(() => {
+        if(i18n.isInitialized) {
+            setTimeout(() => {
+                i18n.changeLanguage(selectedLanguage);
+                if(isLoaded) {
+                    isLoaded();
+                }
+            }, 50);
+        }
+    }, [selectedLanguage, i18n.isInitialized])
 
     const nameGenerators = useCallback(() => {
         const [selLang,] = selectedLanguage.split('-');
@@ -30,6 +50,7 @@ const LanguageSelect = () => {
                     onClick={() => {
                         i18n.changeLanguage(languageCode);
                         setSelectedLanguage(languageCode);
+                        localStorage.setItem('activeLocale', languageCode);
                     }}>
                     <div className="inline-block px-1">
                         <ReactCountryFlag countryCode={country} />

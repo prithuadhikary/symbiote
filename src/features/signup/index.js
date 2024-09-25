@@ -1,15 +1,19 @@
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
-import { Button, Checkbox, Label, TextInput } from 'flowbite-react';
-import React, { useCallback, useEffect } from 'react';
+import { Alert, Button, Checkbox, Label, TextInput } from 'flowbite-react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import useApi from '../../util/useApi';
+import { useTranslation } from 'react-i18next';
+import LanguageSelect from '../../common/LanguageSelect';
+import { ExclamationIcon } from '@heroicons/react/outline';
 ;
 
 const Signup = () => {
-
+    const { t } = useTranslation();
     const { post, get } = useApi();
     const navigate = useNavigate();
+    const [signupError, setSignupError] = useState(null);
 
     const {
         register,
@@ -24,7 +28,11 @@ const Signup = () => {
             console.log(response);
             navigate("/login/true");
         } catch (error) {
-            console.log(error);
+            if (error.response?.data?.errorMessage) {
+                setSignupError(error.response.data.errorMessage);
+            } else {
+                setSignupError(t('Something went terribly wrong.'));
+            }
         }
     };
 
@@ -48,26 +56,31 @@ const Signup = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
             <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-8">
-                <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">Sign Up</h2>
-
+                <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">{t('Sign Up')}</h2>
+                <div className='flex items-center justify-center pb-2'>
+                    <LanguageSelect />
+                </div>
+                {signupError && <Alert className='mt-0 mb-4 text-center' color="failure" icon={ExclamationIcon}>
+                    {signupError}
+                </Alert>}
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     {/* Username with Email Validation */}
                     <div>
                         <div className="mb-2 block">
-                            <Label htmlFor="username" value="Email Address (Username)" />
+                            <Label htmlFor="username" value={t('Email Address (Username)')} />
                         </div>
                         <TextInput
                             id="username"
                             type="text"
                             placeholder="you@example.com"
                             {...register('username', {
-                                required: 'Username is required',
+                                required: t('Username is required'),
                                 pattern: {
                                     value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-                                    message: 'Invalid email format',
+                                    message: t('Invalid email format'),
                                 },
                                 validate: AwesomeDebouncePromise(async (value) => {
-                                    return await usernameAvailable(value) || 'Username is already taken.';
+                                    return await usernameAvailable(value) || t("Username is already taken.");
                                 }, 500),
                             })}
                             color={errors.username ? 'failure' : 'default'}
@@ -78,13 +91,13 @@ const Signup = () => {
                     {/* First Name */}
                     <div>
                         <div className="mb-2 block">
-                            <Label htmlFor="firstName" value="First Name" />
+                            <Label htmlFor="firstName" value={t('First Name')} />
                         </div>
                         <TextInput
                             id="firstName"
                             type="text"
-                            placeholder="First Name"
-                            {...register('firstName', { required: 'First name is required' })}
+                            placeholder={t('First Name')}
+                            {...register('firstName', { required: t('First name is required') })}
                             color={errors.firstName ? 'failure' : 'default'}
                             helperText={errors.firstName && <span className="text-red-500">{errors.firstName.message}</span>}
                         />
@@ -93,13 +106,13 @@ const Signup = () => {
                     {/* Last Name */}
                     <div>
                         <div className="mb-2 block">
-                            <Label htmlFor="lastName" value="Last Name" />
+                            <Label htmlFor="lastName" value={t('Last Name')} />
                         </div>
                         <TextInput
                             id="lastName"
                             type="text"
-                            placeholder="Last Name"
-                            {...register('lastName', { required: 'Last name is required' })}
+                            placeholder={t('Last Name')}
+                            {...register('lastName', { required: t('Last name is required') })}
                             color={errors.lastName ? 'failure' : 'default'}
                             helperText={errors.lastName && <span className="text-red-500">{errors.lastName.message}</span>}
                         />
@@ -108,17 +121,17 @@ const Signup = () => {
                     {/* Password */}
                     <div>
                         <div className="mb-2 block">
-                            <Label htmlFor="password" value="Password" />
+                            <Label htmlFor="password" value={t('Password')} />
                         </div>
                         <TextInput
                             id="password"
                             type="password"
                             placeholder="••••••••"
                             {...register('password', {
-                                required: 'Password is required',
+                                required: t('Password is required'),
                                 minLength: {
                                     value: 8,
-                                    message: 'Password must be at least 8 characters long',
+                                    message: t('Password must be at least 8 characters long'),
                                 },
                             })}
                             color={errors.password ? 'failure' : 'default'}
@@ -129,15 +142,15 @@ const Signup = () => {
                     {/* Confirm Password */}
                     <div>
                         <div className="mb-2 block">
-                            <Label htmlFor="confirmPassword" value="Confirm Password" />
+                            <Label htmlFor="confirmPassword" value={t('Confirm Password')} />
                         </div>
                         <TextInput
                             id="confirmPassword"
                             type="password"
                             placeholder="••••••••"
                             {...register('confirmPassword', {
-                                required: 'Please confirm your password',
-                                validate: (value) => value === password || 'Passwords do not match',
+                                required: t('Please confirm your password'),
+                                validate: (value) => value === password || t('Passwords do not match.'),
                             })}
                             color={errors.confirmPassword ? 'failure' : 'default'}
                             helperText={errors.confirmPassword && (
@@ -148,21 +161,21 @@ const Signup = () => {
 
                     {/* Terms and Conditions */}
                     <div className="flex items-center gap-2">
-                        <Checkbox id="terms" {...register('terms', { required: 'You must accept the terms' })} />
-                        <Label htmlFor="terms" value="I accept the Terms and Conditions" />
+                        <Checkbox id="terms" {...register('terms', { required: t('You must accept the terms.') })} />
+                        <Label htmlFor="terms" value={t('I accept the Terms and Conditions.')} />
                         {errors.terms && <span className="text-red-500 text-sm">{errors.terms.message}</span>}
                     </div>
 
                     {/* Submit Button */}
                     <Button type="submit" color="primary" className="w-full">
-                        Sign Up
+                        {t('Sign Up')}
                     </Button>
 
                     {/* Redirect to Login */}
                     <p className="text-center text-sm text-gray-600 mt-4">
-                        Already have an account?{' '}
+                        {t('Already have an account?')}{' '}
                         <Link to="/login" className="text-blue-600 hover:underline">
-                            Log in
+                            {t('Log in')};
                         </Link>
                     </p>
                 </form>
