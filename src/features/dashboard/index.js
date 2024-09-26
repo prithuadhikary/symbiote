@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Sidebar } from '../../common/Sidebar';
+import LanguageSelect from '../../common/LanguageSelect';
 
 const AdminDashboard = () => {
   return (
@@ -11,8 +12,11 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <div className="flex-grow bg-gray-100">
         {/* Header */}
-        <header className="h-16 bg-white shadow-md flex items-center px-6">
+        <header className="h-16 w-full bg-white shadow-md flex justify-between items-center px-6">
           <h1 className="text-xl font-semibold">Dashboard</h1>
+          
+              <LanguageSelect />
+          
         </header>
 
         {/* Main Content Area */}

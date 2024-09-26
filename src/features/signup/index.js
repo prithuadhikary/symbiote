@@ -1,20 +1,21 @@
+import { ExclamationIcon } from '@heroicons/react/outline';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import { Alert, Button, Checkbox, Label, TextInput } from 'flowbite-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
-import useApi from '../../util/useApi';
 import { useTranslation } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom';
 import LanguageSelect from '../../common/LanguageSelect';
-import { ExclamationIcon } from '@heroicons/react/outline';
+import { useSingupMutation, useUsernameAvailableMutation } from '../../store/signupSlice';
 ;
 
 const Signup = () => {
     const { t } = useTranslation();
-    const { post, get } = useApi();
     const navigate = useNavigate();
     const [signupError, setSignupError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [signup] = useSingupMutation();
+    const [isUsernameAvailable] = useUsernameAvailableMutation();
 
     const {
         register,
@@ -24,11 +25,11 @@ const Signup = () => {
         formState: { errors },
     } = useForm();
     const onSubmit = async (data) => {
-        try {
-            const response = await post('/signup', data);
-            console.log(response);
+        const { error } = await signup(data);
+        if (!error) {
+            console.log(data);
             navigate("/login/true");
-        } catch (error) {
+        } else {
             if (error.response?.data?.errorMessage) {
                 setSignupError(error.response.data.errorMessage);
             } else {
@@ -39,13 +40,13 @@ const Signup = () => {
 
     const usernameAvailable = useCallback(async (username) => {
         try {
-            const response = await get(`/signup/usernameAvailable/${username}`);
-            return response.available;
+            const { data: { available } } = await isUsernameAvailable(username);
+            return available;
         } catch (error) {
             console.log(error);
             return false;
         }
-    }, [get])
+    }, [isUsernameAvailable])
 
     useEffect(() => {
         setFocus("username");
@@ -59,7 +60,7 @@ const Signup = () => {
             <div className={`bg-white rounded-lg shadow-lg w-full max-w-md p-8 transition-opacity duration-300 ${!isLoaded ? 'opacity-0' : ''}`}>
                 <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">{t('Sign Up')}</h2>
                 <div className='flex items-center justify-center pb-2'>
-                    <LanguageSelect isLoaded={() => setIsLoaded(true)}/>
+                    <LanguageSelect isLoaded={() => setIsLoaded(true)} />
                 </div>
                 {signupError && <Alert className='mt-0 mb-4 text-center' color="failure" icon={ExclamationIcon}>
                     {signupError}

@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Flowbite } from 'flowbite-react';
 import './util/i18n';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -19,11 +21,13 @@ const customTheme = {
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-    <Flowbite theme={{ theme: customTheme }}>
-      <App />
-      </Flowbite>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Flowbite theme={{ theme: customTheme }}>
+          <App />
+        </Flowbite>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );
 
