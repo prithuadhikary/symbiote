@@ -3,6 +3,7 @@ import './App.css';
 import Login from './features/login';
 import AdminDashboard from './features/dashboard';
 import Signup from './features/signup';
+import { PrivateRoutes } from './common/PrivateRoute';
 
 function App() {
   return (
@@ -10,7 +11,9 @@ function App() {
       <Route index element={<Navigate to="/login" />} />
       <Route path='/login/:signedUp?' element={<Login />} />
       <Route path='/signup' element={<Signup />} />
-      <Route path='/dashboard' element={<AdminDashboard />} />
+      <Route element={<PrivateRoutes />}>        
+        <Route path='/dashboard' element={<AdminDashboard />} />
+      </Route>
     </Routes>
   );
 }

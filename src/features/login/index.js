@@ -5,11 +5,14 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import LanguageSelect from '../../common/LanguageSelect';
-import { useLoginMutation } from '../../store/authSlice';
+import { useLoginMutation } from '../../store/authApiSlice';
+import { useDispatch } from 'react-redux';
+import { setAccessToken } from '../../store/authSlice';
 
 const Login = () => {
     const { t } = useTranslation();
     const { signedUp } = useParams();
+    const dispatch = useDispatch();
     const [login] = useLoginMutation();
     const [loginError, setLoginError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -26,6 +29,9 @@ const Login = () => {
         const response = await login(data);
         if (response.data) {
             localStorage.setItem('accessToken', response.data.accessToken);
+            dispatch(setAccessToken({
+                accessToken: response.data.accessToken
+            }))
             navigate('/dashboard');
         } else if (response.error) {
             setLoginError(response.error.data.errorMessage);

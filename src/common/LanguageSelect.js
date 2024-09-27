@@ -66,11 +66,11 @@ const LanguageSelect = ({ isLoaded }) => {
         const [selLang, selCountry] = selectedLanguage.split('-');
         const selectedRegion = regionGenerator.of(selCountry);
         const selectedLang = languageGenerator.of(selLang);
-        return (<Button size="sm" color="white">
+        return (<Button size="sm" color="white" className="flex items-center">
             <div className="inline-block px-1">
                 <ReactCountryFlag countryCode={selCountry} />
             </div>
-            {selectedRegion} ({selectedLang})
+            <div className="text-sm font-sm">{selectedRegion} ({selectedLang})</div>
         </Button>)
     }}>
         {items}

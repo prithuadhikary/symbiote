@@ -2,14 +2,16 @@ import {
   HomeIcon,
   LogoutIcon,
 } from '@heroicons/react/outline'; // Optional icons, use any icon library you like.
-import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { doLogout } from '../store/authSlice';
 
 export const Sidebar = () => {
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const logout = () => {
-    localStorage.clear();
+    dispatch(doLogout());
     navigate('/login');
   }
 
@@ -38,13 +40,14 @@ export const Sidebar = () => {
 
       {/* Logout */}
       <div className="py-4 w-full">
-        <Link
-          to="/login"
+        <a
+          href='#'
+          onClick={logout}
           className="group flex flex-col items-center text-sm py-3 w-full transition-all hover:bg-gradient-to-r from-red-500 to-red-700 rounded-lg"
         >
           <LogoutIcon className="h-6 w-6 mb-1 group-hover:text-white transition-all" />
           <span className="group-hover:text-white">Logout</span>
-        </Link>
+        </a>
       </div>
     </aside>
   );

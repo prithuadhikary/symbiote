@@ -1,23 +1,18 @@
 import React from 'react';
 
+import { Header } from '../../common/Header';
 import { Sidebar } from '../../common/Sidebar';
-import LanguageSelect from '../../common/LanguageSelect';
 
 const AdminDashboard = () => {
   return (
     <div className="min-h-screen flex">
       {/* Sidebar */}
-      <Sidebar/>
+      <Sidebar />
 
       {/* Main Content */}
       <div className="flex-grow bg-gray-100">
         {/* Header */}
-        <header className="h-16 w-full bg-white shadow-md flex justify-between items-center px-6">
-          <h1 className="text-xl font-semibold">Dashboard</h1>
-          
-              <LanguageSelect />
-          
-        </header>
+        <Header/>
 
         {/* Main Content Area */}
         <main className="p-6">
