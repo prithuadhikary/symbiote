@@ -14,7 +14,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 const customTheme = {
   button: {
     color: {
-      primary: "bg-indigo-500 hover:bg-indigo-600 text-white",
+      primary: "bg-indigo-500 hover:bg-indigo-600 text-white"
     },
   },
 };
