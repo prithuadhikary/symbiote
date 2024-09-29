@@ -6,12 +6,14 @@ import {
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { doLogout } from '../store/authSlice';
+import { apiSlice } from '../store/apiSlice';
 
 export const Sidebar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const logout = () => {
+    dispatch(apiSlice.util.resetApiState());
     dispatch(doLogout());
     navigate('/login');
   }
