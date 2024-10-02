@@ -93,30 +93,30 @@ const Signup = () => {
                     {/* First Name */}
                     <div>
                         <div className="mb-2 block">
-                            <Label htmlFor="firstName" value={t('First Name')} />
+                            <Label htmlFor="givenName" value={t('First Name')} />
                         </div>
                         <TextInput
-                            id="firstName"
+                            id="givenName"
                             type="text"
                             placeholder={t('First Name')}
-                            {...register('firstName', { required: t('First name is required') })}
-                            color={errors.firstName ? 'failure' : 'default'}
-                            helperText={errors.firstName && <span className="text-red-500">{errors.firstName.message}</span>}
+                            {...register('givenName', { required: t('First name is required') })}
+                            color={errors.givenName ? 'failure' : 'default'}
+                            helperText={errors.givenName && <span className="text-red-500">{errors.givenName.message}</span>}
                         />
                     </div>
 
                     {/* Last Name */}
                     <div>
                         <div className="mb-2 block">
-                            <Label htmlFor="lastName" value={t('Last Name')} />
+                            <Label htmlFor="familyName" value={t('Last Name')} />
                         </div>
                         <TextInput
-                            id="lastName"
+                            id="familyName"
                             type="text"
                             placeholder={t('Last Name')}
-                            {...register('lastName', { required: t('Last name is required') })}
-                            color={errors.lastName ? 'failure' : 'default'}
-                            helperText={errors.lastName && <span className="text-red-500">{errors.lastName.message}</span>}
+                            {...register('familyName', { required: t('Last name is required') })}
+                            color={errors.familyName ? 'failure' : 'default'}
+                            helperText={errors.familyName && <span className="text-red-500">{errors.familyName.message}</span>}
                         />
                     </div>
 
