@@ -37,6 +37,7 @@ const UserCreationModal = ({ isOpen, setIsOpen, loadUsers }) => {
     console.log(data);
     createUser(data).then((response) => {
       toggleModal(); // Close modal on submit
+      //TODO: check for error response and show it in modal.
       loadUsers();
     })
   };
