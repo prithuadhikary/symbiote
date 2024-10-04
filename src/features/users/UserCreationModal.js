@@ -1,5 +1,5 @@
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Modal, Button, Label, TextInput, Select } from 'flowbite-react';
 import { useForm } from 'react-hook-form';
 import { useUsernameAvailableMutation } from '../../store/signupSlice';
@@ -8,15 +8,15 @@ import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import { useCreateUserMutation } from '../../store/userApiSlice';
 import { useLazyListRealmsQuery } from '../../store/realmApiSlice';
 import { useLazyListRolesQuery } from '../../store/roleApiSlice';
+import { FormErrors } from '../../common/FormErrors';
 
 const UserCreationModal = ({ isOpen, setIsOpen, loadUsers }) => {
   const { t } = useTranslation();
   const [isUsernameAvailable] = useUsernameAvailableMutation();
   const [createUser] = useCreateUserMutation();
-
   const [loadRealms, { data: realmList }] = useLazyListRealmsQuery();
-
   const [loadRoles, { data: roles, isLoading: roleIsLoading }] = useLazyListRolesQuery();
+  const [error, setError] = useState(null);
 
 
   // React Hook Form setup
@@ -30,15 +30,20 @@ const UserCreationModal = ({ isOpen, setIsOpen, loadUsers }) => {
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
+    setError(null);
     reset(); // Reset form on close
   };
 
   const onSubmit = (data) => {
     console.log(data);
     createUser(data).then((response) => {
-      toggleModal(); // Close modal on submit
-      //TODO: check for error response and show it in modal.
-      loadUsers();
+      console.log(response.data);
+      if (!response.error) {
+        toggleModal(); // Close modal on submit
+        loadUsers();
+      } else {
+        setError(response.error.data)
+      }
     })
   };
 
@@ -49,13 +54,13 @@ const UserCreationModal = ({ isOpen, setIsOpen, loadUsers }) => {
 
   useEffect(() => {
     if (realmId) {
-      loadRoles(realmId);
+      loadRoles(realmId, true);
     }
   }, [realmId]);
 
   useEffect(() => {
-    loadRealms()
-      .then(realms => loadRoles(realms.data[0].id));
+    loadRealms(null, true)
+      .then(realms => loadRoles(realms.data[0].id, true));
   }, [])
 
 
@@ -74,10 +79,14 @@ const UserCreationModal = ({ isOpen, setIsOpen, loadUsers }) => {
     <>
       {/* Modal Component */}
       <Modal show={isOpen} size="lg" popup={true} onClose={toggleModal}>
-        <Modal.Header />
+        <Modal.Header>
+          <h3 className="text-xl font-medium text-gray-900 m-4">Create New User</h3>
+        </Modal.Header>
         <Modal.Body>
-          <h3 className="text-xl font-medium text-gray-900 mb-4">Create New User</h3>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <div className='mb-4'>
+            {error && <FormErrors error={error}/>}
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)}>            
             {/* Username (Email) */}
             <div className="mb-4">
               <Label htmlFor="username" value="Username (Email)" />
@@ -141,6 +150,10 @@ const UserCreationModal = ({ isOpen, setIsOpen, loadUsers }) => {
                     value: 6,
                     message: 'Password must be at least 6 characters long',
                   },
+                  pattern: {
+                    value: /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/,
+                    message: 'Password must contain a capital letter, a special character and a number.'
+                  }
                 })}
               />
               {errors.password && (
@@ -172,7 +185,7 @@ const UserCreationModal = ({ isOpen, setIsOpen, loadUsers }) => {
               <Select
                 id="realmId"
                 {...register('realmId', {
-                  required: 'Please select a realm to create user in.'
+                  required: t('Please select a realm to create user in.')
                 })}
               >
                 {realmList && realmList.map(realm => (<option value={realm.id}>{realm.name}</option>))}
@@ -189,14 +202,14 @@ const UserCreationModal = ({ isOpen, setIsOpen, loadUsers }) => {
               <Select
                 id="roleId"
                 {...register('roleId', {
-                  required: 'Please select a role.',
-                  validate: () => !!realmId || 'Select a realm first'
+                  required: t('Please select a role.'),
+                  validate: () => !!realmId || t('Select a realm first')
                 })}
               >
                 {roles && roles.map(role => (<option value={role.id}>{role.displayName}</option>))}
               </Select>
 
-              {errors.roles && (
+              {errors.roleId && (
                 <p className="text-red-500 text-sm mt-1">{errors.roles.message}</p>
               )}
             </div>

@@ -14,7 +14,18 @@ export const usersApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["Users"]
         }),
+        updateUser: builder.mutation({
+            query: ({id, request}) => {
+                console.log(id, request)
+                return ({
+                    url: '/users/' + id,
+                    method: 'put',
+                    body: request
+                })
+            },
+            invalidatesTags: ["Users"]
+        })
     })
 });
 
-export const { useLazyListUsersQuery, useCreateUserMutation } = usersApi;
+export const { useLazyListUsersQuery, useCreateUserMutation, useUpdateUserMutation } = usersApi;
