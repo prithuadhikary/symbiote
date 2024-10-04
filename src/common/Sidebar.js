@@ -1,12 +1,15 @@
 import {
   HomeIcon,
   LogoutIcon,
+  UserGroupIcon,
   UsersIcon
 } from '@heroicons/react/outline'; // Optional icons, use any icon library you like.
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { doLogout } from '../store/authSlice';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { apiSlice } from '../store/apiSlice';
+import { doLogout } from '../store/authSlice';
+import './Sidebar.css';
+import { setActiveTab } from '../store/navSlice';
 
 export const Sidebar = () => {
   const dispatch = useDispatch();
@@ -29,24 +32,41 @@ export const Sidebar = () => {
       <nav className="flex-grow space-y-6">
         <ul className="flex flex-col items-center space-y-4 w-full">
           <li className="w-full">
-            <Link
-              to="/dashboard"
+            <NavLink
+              onClick={() => {
+                dispatch(setActiveTab('Dashboard'))
+              }}
+              to="/protected/dashboard"
               className="group flex flex-col items-center text-sm py-4 px-4 w-full transition-all hover:bg-gradient-to-r from-blue-500 to-cyan-500"
             >
               <HomeIcon className="h-6 w-6 mb-1 group-hover:text-white transition-all" />
               <span className="group-hover:text-white">Dashboard</span>
-            </Link>
+            </NavLink>
           </li>
           <li className="w-full">
-            <Link
-              to="/dashboard/users"
+            <NavLink
+              to="/protected/users"
+              onClick={() => {
+                dispatch(setActiveTab('User Management'))
+              }}
               className="group flex flex-col items-center text-sm py-4 px-4 w-full transition-all hover:bg-gradient-to-r from-blue-500 to-cyan-500"
             >
               <UsersIcon className="h-6 w-6 mb-1 group-hover:text-white transition-all" />
               <span className="group-hover:text-white">Users</span>
-            </Link>
+            </NavLink>
           </li>
-          {/* ... other navigation items ... */}
+          <li className="w-full">
+            <NavLink
+              to="/protected/groups"
+              onClick={() => {
+                dispatch(setActiveTab('Groups'))
+              }}
+              className="group flex flex-col items-center text-sm py-4 px-4 w-full transition-all hover:bg-gradient-to-r from-blue-500 to-cyan-500"
+            >
+              <UserGroupIcon className="h-6 w-6 mb-1 group-hover:text-white transition-all" />
+              <span className="group-hover:text-white">Groups</span>
+            </NavLink>
+          </li>
         </ul>
       </nav>
 

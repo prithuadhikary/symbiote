@@ -32,7 +32,7 @@ const Login = () => {
             dispatch(setAccessToken({
                 accessToken: response.data.accessToken
             }))
-            navigate('/dashboard');
+            navigate('/protected/dashboard');
         } else if (response.error) {
             setLoginError(response.error.data.errorMessage);
         }

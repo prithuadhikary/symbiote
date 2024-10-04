@@ -121,7 +121,7 @@ export const UserEditModal =({ isOpen, setIsOpen, userToEdit, loadUsers }) => {
                     required: t('Please select a realm to create user in.')
                   })}
                 >
-                  {realmList && realmList.map(realm => (<option value={realm.id}>{realm.name}</option>))}
+                  {realmList && realmList.map(realm => (<option selected={userToEdit.realm.id === realm.id} value={realm.id}>{realm.name}</option>))}
                 </Select>
   
                 {errors.realmId && (

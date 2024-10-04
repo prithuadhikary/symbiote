@@ -1,7 +1,7 @@
+import { InformationCircleIcon } from '@heroicons/react/outline';
 import { Alert, Button, Card, Pagination, Table, Tooltip } from 'flowbite-react';
 import React, { useEffect, useState } from 'react';
 import { useLazyListUsersQuery } from '../../store/userApiSlice';
-import { InformationCircleIcon } from '@heroicons/react/outline'
 import UserCreationModal from './UserCreationModal';
 import { UserEditModal } from './UserEditModal';
 
@@ -38,7 +38,9 @@ const UsersPage = () => {
         <>
             <Card className="p-4">
                 <div className="mb-4 flex items-center justify-between">
-                    <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">User Management</h5>
+                    <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                        <span>User List</span>
+                    </h5>
                     <Button size="md" color="primary" onClick={() => setCreateOpen(true)}>
                         Create
                     </Button>
@@ -88,12 +90,12 @@ const UsersPage = () => {
                                         </label>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <Button 
+                                        <Button
                                             color="white"
                                             onClick={() => {
                                                 setUserToEdit(user);
                                                 setEditOpen(true);
-                                            }}                                            
+                                            }}
                                             className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
                                             Edit
                                         </Button>
@@ -104,7 +106,7 @@ const UsersPage = () => {
 
                     </Table.Body>
                 </Table>
-                <div className='flex justify-end'>
+                <div className='flex justify-center'>
                     <Pagination currentPage={currentPage} totalPages={userPage.page.totalPages} onPageChange={onPageChange} showIcons />
                 </div>
             </Card>
